@@ -27,6 +27,7 @@ namespace MathUtil.Tests
             //TestNormalize();
             //TestProject();
             //BenchProject();
+            TestReflect();
             //TestAngle();
             //TestLerp();
             //TestSlerp();
@@ -170,15 +171,15 @@ namespace MathUtil.Tests
             Console.WriteLine("Normalize: " + normalize);
         }
 
-        static void TestProjection()
+        static void TestProject()
         {
             var v1 = new Vector2(1.0, 1.0);
             var v2 = new Vector2(1.0, 2.0);
-            var project = v1.Projection(v2);
-            Console.WriteLine("Projection: " + project);
+            var project = v1.Project(v2);
+            Console.WriteLine("Project: " + project);
         }
 
-        static void BenchProjection()
+        static void BenchProject()
         {
             var a = new Vector2[BenchSize];
             var sw = Stopwatch.StartNew();
@@ -186,11 +187,19 @@ namespace MathUtil.Tests
             {
                 var v1 = new Vector2(1.0, 1.0);
                 var v2 = new Vector2(1.0, 2.0);
-                var project = v1.Projection(v2);
+                var project = v1.Project(v2);
                 a[i] = project;
             }
             sw.Stop();
-            Console.WriteLine("Projection: " + sw.Elapsed.TotalMilliseconds + "ms");
+            Console.WriteLine("Project: " + sw.Elapsed.TotalMilliseconds + "ms");
+        }
+
+        static void TestReflect()
+        {
+            var v1 = new Vector2(1.0, 0.0);
+            var v2 = new Vector2(1.0, 0.0);
+            var reflect = v1.Reflect(v2);
+            Console.WriteLine("Reflect: " + reflect);
         }
 
         private static void TestAngle()

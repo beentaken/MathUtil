@@ -37,16 +37,40 @@ namespace System
 
         #endregion
 
-        #region ToString
+        #region Overrides
 
         public override string ToString()
         {
             return string.Concat(X, System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator, Y);
         }
 
+        public bool Equals(Vector2 v)
+        {
+            return this.X == v.X && this.Y == v.Y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Vector2)
+            {
+                return this.Equals((Vector2)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.X.GetHashCode() + this.Y.GetHashCode();
+        }
+
         #endregion
 
         #region Arithmetic
+
+        public Vector2 Negate()
+        {
+            return new Vector2(-this.X, -this.Y);
+        }
 
         public Vector2 Substract(Vector2 v)
         {
@@ -65,31 +89,26 @@ namespace System
                 this.Y * scalar);
         }
 
-        public Vector2 Divide(double scalar)
+        public Vector2 Multiply(Vector2 v)
         {
             return new Vector2(
-                this.X / scalar,
-                this.Y / scalar);
+                this.X * v.X,
+                this.Y * v.Y);
         }
 
-        public static Vector2 operator -(Vector2 v1, Vector2 v2)
+        public Vector2 Divide(double scalar)
         {
-            return v1.Substract(v2);
+            double value = 1.0 / scalar;
+            return new Vector2(
+                this.X * value,
+                this.Y * value);
         }
 
-        public static Vector2 operator +(Vector2 v1, Vector2 v2)
+        public Vector2 Divide(Vector2 v)
         {
-            return v1.Add(v2);
-        }
-
-        public static Vector2 operator *(Vector2 v, double scalar)
-        {
-            return v.Multiply(scalar);
-        }
-
-        public static Vector2 operator /(Vector2 v, double scalar)
-        {
-            return v.Divide(scalar);
+            return new Vector2(
+                this.X / v.X,
+                this.Y / v.Y);
         }
 
         public double Dot(Vector2 v)
@@ -105,6 +124,71 @@ namespace System
         public double Cross(Vector2 v)
         {
             return (this.X * v.Y) - (this.Y * v.X);
+        }
+
+        #endregion
+
+        #region Operators
+
+        public static bool operator ==(Vector2 v1, Vector2 v2)
+        {
+            return v1.X == v2.X && v1.Y == v2.Y;
+        }
+
+        public static bool operator !=(Vector2 v1, Vector2 v2)
+        {
+            return v1.X != v2.X || v1.Y != v2.Y;
+        }
+
+        public static Vector2 operator -(Vector2 v)
+        {
+            return new Vector2(-v.X, -v.Y);
+        }
+
+        public static Vector2 operator -(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(v1.X - v2.X, v1.Y - v2.Y);
+        }
+
+        public static Vector2 operator +(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(v1.X + v2.X, v1.Y + v2.Y);
+        }
+
+        public static Vector2 operator *(Vector2 v, double scalar)
+        {
+            return new Vector2(
+                v.X * scalar,
+                v.Y * scalar);
+        }
+
+        public static Vector2 operator *(double scalar, Vector2 v)
+        {
+            return new Vector2(
+                v.X * scalar,
+                v.Y * scalar);
+        }
+
+        public static Vector2 operator *(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(
+                v1.X * v2.X,
+                v1.Y * v2.Y);
+        }
+
+        public static Vector2 operator /(Vector2 v, double scalar)
+        {
+            double value = 1.0 / scalar;
+            return new Vector2(
+                v.X * value,
+                v.Y * value);
+        }
+
+        public static Vector2 operator /(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(
+                v1.X / v2.X,
+                v1.Y / v2.Y);
         }
 
         #endregion
@@ -136,9 +220,17 @@ namespace System
             return this / this.Length();
         }
 
-        public Vector2 Projection(Vector2 v)
+        public Vector2 Project(Vector2 v)
         {
             return v * (this.Dot(v) / v.Dot(v));
+        }
+
+        public Vector2 Reflect(Vector2 normal)
+        {
+            double dot = this.Dot(normal);
+            return new Vector2(
+                this.X - 2.0 * dot * normal.X,
+                this.Y - 2.0 * dot * normal.Y);
         }
 
         /*
@@ -147,7 +239,7 @@ namespace System
             return this.Dot(v.Normalize());
         }
 
-        public Vector2 Projection(Vector2 v)
+        public Vector2 Project(Vector2 v)
         {
             return v.Normalize() * this.Component(v);
         }
@@ -195,7 +287,7 @@ namespace System
 
         public Vector2 NearestPointOnLine(Vector2 a, Vector2 b)
         {
-            return (this - a).Projection(b - a) + a;
+            return (this - a).Project(b - a) + a;
         }
 
         #endregion
