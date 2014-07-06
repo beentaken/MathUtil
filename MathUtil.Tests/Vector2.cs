@@ -220,10 +220,20 @@ namespace System
             return this / this.Length();
         }
 
+        //public double Component(Vector2 v)
+        //{
+        //    return this.Dot(v.Normalize());
+        //}
+
         public Vector2 Project(Vector2 v)
         {
             return v * (this.Dot(v) / v.Dot(v));
         }
+        
+        //public Vector2 Project(Vector2 v)
+        //{
+        //    return v.Normalize() * this.Component(v);
+        //}
 
         public Vector2 Reflect(Vector2 normal)
         {
@@ -232,18 +242,6 @@ namespace System
                 this.X - 2.0 * dot * normal.X,
                 this.Y - 2.0 * dot * normal.Y);
         }
-
-        /*
-        public double Component(Vector2 v)
-        {
-            return this.Dot(v.Normalize());
-        }
-
-        public Vector2 Project(Vector2 v)
-        {
-            return v.Normalize() * this.Component(v);
-        }
-        */
 
         public Vector2 Min(Vector2 v)
         {
