@@ -10,41 +10,52 @@ namespace MathUtil.Tests
 {
     public struct Vector2
     {
+        #region Properties
+
         public double X { get; private set; }
         public double Y { get; private set; }
+
+        #endregion
+
+        #region Constructor
 
         public Vector2(double x, double y)
             : this()
         {
             this.X = x;
             this.Y = y;
-        }
+        } 
+
+        #endregion
+
+        #region ToString
 
         public override string ToString()
         {
             return string.Concat(X, CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator, Y);
         }
 
+        #endregion
+
+        public double Length()
+        {
+            return Math.Sqrt(this.X * this.X + this.Y * this.Y);
+        }
+
+        public double LengthSquared()
+        {
+            return this.X * this.X + this.Y * this.Y;
+        }
+
+        public Vector2 Normalize()
+        {
+            double length = this.Length();
+            return this / length;
+        }
+
         public double Dot(Vector2 v)
         {
             return (this.X * v.X) + (this.Y * v.Y);
-        }
-
-        public Vector2 Multiply(double scalar)
-        {
-            return new Vector2(
-                this.X * scalar,
-                this.Y * scalar);
-        }
-
-        public static Vector2 operator *(Vector2 v, double scalar)
-        {
-            return v.Multiply(scalar);
-        }
-
-        public Vector2 Project(Vector2 v)
-        {
-            return v * (this.Dot(v) / v.Dot(v));
         }
 
         public Vector2 Substract(Vector2 v)
@@ -67,6 +78,59 @@ namespace MathUtil.Tests
             return v1.Add(v2);
         }
 
+        public Vector2 Multiply(double scalar)
+        {
+            return new Vector2(
+                this.X * scalar,
+                this.Y * scalar);
+        }
+
+        public static Vector2 operator *(Vector2 v, double scalar)
+        {
+            return v.Multiply(scalar);
+        }
+
+        public Vector2 Divide(double scalar)
+        {
+            return new Vector2(
+                this.X / scalar,
+                this.Y / scalar);
+        }
+
+        public static Vector2 operator /(Vector2 v, double scalar)
+        {
+            return v.Divide(scalar);
+        }
+
+        public Vector2 Project(Vector2 v)
+        {
+            return v * (this.Dot(v) / v.Dot(v));
+        }
+ 
+        #region Interpolation
+
+        public Vector2 Lerp(Vector2 v, double amount)
+        {
+            return this + (v - this) * amount;
+        }
+
+        public Vector2 Slerp(Vector2 v, double amount)
+        {
+            double dot = Clamp(this.Dot(v), -1.0, 1.0);
+            double theta = Math.Acos(dot) * amount;
+            Vector2 relative = (v - this * dot).Normalize();
+            return ((this * Math.Cos(theta)) + (relative * Math.Sin(theta)));
+        }
+
+        public Vector2 Nlerp(Vector2 v, double amount)
+        {
+            return this.Lerp(v, amount).Normalize();
+        }
+        
+        #endregion
+
+        #region Point
+
         public double Distance(Vector2 v)
         {
             double dx = this.X - v.X;
@@ -77,29 +141,25 @@ namespace MathUtil.Tests
         public Vector2 Middle(Vector2 v)
         {
             return new Vector2(
-                (this.X + v.X) / 2.0, 
+                (this.X + v.X) / 2.0,
                 (this.Y + v.Y) / 2.0);
-        }
-
-        public Vector2 Lerp(Vector2 v, double amount)
-        {
-            return this + (v - this) * amount;
-        }
-
-        public double Length()
-        {
-            return Math.Sqrt(this.X * this.X + this.Y * this.Y);
-        }
-
-        public double LengthSquared()
-        {
-            return this.X * this.X + this.Y * this.Y;
         }
 
         public Vector2 NearestPointOnLine(Vector2 a, Vector2 b)
         {
             return (this - a).Project(b - a) + a;
         }
+
+        #endregion
+
+        #region Math
+
+        public static double Clamp(double value, double min, double max)
+        {
+            return value > max ? max : value < min ? min : value;
+        }
+
+        #endregion
     }
 
     public struct PointF
@@ -206,12 +266,98 @@ namespace MathUtil.Tests
 
             //TestMiddle();
 
+            //TestLength();
+            //TestLengthSquared();
+
+            //TestDivide();
+
+            //TestNormalize();
+
             //TestLerp();
 
-            TestLength();
-            TestLengthSquared();
+            //TestSlerp();
+            //BenchSlerp();
+
+            //TestNlerp();
+            //BenchNlerp();
 
             Console.ReadLine();
+        }
+
+        static void TestNlerp()
+        {
+            var v1 = new Vector2(1.0, 0.0);
+            var v2 = new Vector2(0.0, 1.0);
+            var nlerp = v1.Nlerp(v2, 0.5);
+            Console.WriteLine("Nlerp: " + nlerp);
+        }
+
+        static void BenchNlerp()
+        {
+            var a = new Vector2[BenchSize];
+            var sw = Stopwatch.StartNew();
+            for (int i = 0; i < BenchSize; i++)
+            {
+                var v1 = new Vector2(1.0, 1.0);
+                var v2 = new Vector2(1.0, 2.0);
+                var nlerp = v1.Nlerp(v2, 0.5);
+                a[i] = nlerp;
+            }
+            sw.Stop();
+            Console.WriteLine("Nlerp: " + sw.Elapsed.TotalMilliseconds + "ms");
+        }
+
+        static void TestSlerp()
+        {
+            var v1 = new Vector2(1.0, 0.0);
+            var v2 = new Vector2(0.0, 1.0);
+            var slerp = v1.Slerp(v2, 0.5);
+            Console.WriteLine("Slerp: " + slerp);
+        }
+
+        static void BenchSlerp()
+        {
+            var a = new Vector2[BenchSize];
+            var sw = Stopwatch.StartNew();
+            for (int i = 0; i < BenchSize; i++)
+            {
+                var v1 = new Vector2(1.0, 1.0);
+                var v2 = new Vector2(1.0, 2.0);
+                var slerp = v1.Slerp(v2, 0.5);
+                a[i] = slerp;
+            }
+            sw.Stop();
+            Console.WriteLine("Slerp: " + sw.Elapsed.TotalMilliseconds + "ms");
+        }
+
+        static void TestLerp()
+        {
+            var v1 = new Vector2(1.0, 1.0);
+            var v2 = new Vector2(1.0, 2.0);
+            var lerp = v1.Lerp(v2, 0.2);
+            Console.WriteLine("Lerp: " + lerp);
+        }
+
+        static void TestNormalize()
+        {
+            var v = new Vector2(10.0, 0.0);
+            var normalize = v.Normalize();
+            Console.WriteLine("Normalize: " + normalize);
+        }
+
+        static void TestDivide()
+        {
+            {
+                var v1 = new Vector2(1.0, 1.0);
+                var v2 = v1.Divide(2.0);
+                Console.WriteLine("Divide: " + v2);
+            }
+
+            {
+                var v1 = new Vector2(1.0, 1.0);
+                var v2 = v1 / 2.0;
+                Console.WriteLine("Divide: " + v2);
+            }
         }
 
         static void TestNearestPointOnLine()
@@ -245,14 +391,6 @@ namespace MathUtil.Tests
             var v = new Vector2(10.0, 0.0);
             var length = v.Length();
             Console.WriteLine("Length: " + length);
-        }
-
-        static void TestLerp()
-        {
-            var v1 = new Vector2(1.0, 1.0);
-            var v2 = new Vector2(1.0, 2.0);
-            var lerp = v1.Lerp(v2, 0.2);
-            Console.WriteLine("Lerp: " + lerp);
         }
 
         static void TestMiddle()
