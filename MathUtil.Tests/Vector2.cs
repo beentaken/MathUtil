@@ -141,6 +141,18 @@ namespace System
             return v * (this.Dot(v) / v.Dot(v));
         }
 
+        /*
+        public double Component(Vector2 v)
+        {
+            return this.Dot(v.Normalize());
+        }
+
+        public Vector2 Projection(Vector2 v)
+        {
+            return v.Normalize() * this.Component(v);
+        }
+        */
+
         #endregion
 
         #region Interpolation
