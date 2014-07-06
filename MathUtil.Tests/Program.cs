@@ -184,6 +184,7 @@ namespace MathUtil.Tests
             //TestDivide();
             //TestDot();
             //BenchDot();
+            //TestCross();
 
             //TestLength();
             //TestLengthSquared();
@@ -303,6 +304,14 @@ namespace MathUtil.Tests
             }
             sw.Stop();
             Console.WriteLine("Dot: " + sw.Elapsed.TotalMilliseconds + "ms");
+        }
+
+        static void TestCross()
+        {
+            var v1 = new Vector2(1.0, 1.0);
+            var v2 = new Vector2(1.0, 2.0);
+            double dot = v1.Cross(v2);
+            Console.WriteLine("Cross: " + dot);
         }
 
         static void TestLength()
