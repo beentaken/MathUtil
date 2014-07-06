@@ -245,18 +245,18 @@ namespace System
         }
         */
 
-        public static Vector2 Min(Vector2 v1, Vector2 v2)
+        public Vector2 Min(Vector2 v)
         {
             return new Vector2(
-                v1.X < v2.X ? v1.X : v2.X,
-                v1.Y < v2.Y ? v1.Y : v2.Y);
+                this.X < v.X ? this.X : v.X,
+                this.Y < v.Y ? this.Y : v.Y);
         }
 
-        public static Vector2 Max(Vector2 v1, Vector2 v2)
+        public Vector2 Max(Vector2 v)
         {
             return new Vector2(
-                v1.X > v2.X ? v1.X : v2.X,
-                v1.Y > v2.Y ? v1.Y : v2.Y);
+                this.X > v.X ? this.X : v.X,
+                this.Y > v.Y ? this.Y : v.Y);
         }
 
         #endregion
