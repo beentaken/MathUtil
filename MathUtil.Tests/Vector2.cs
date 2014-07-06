@@ -10,7 +10,23 @@ namespace System
 
         #endregion
 
+        #region Vectors
+
+        public static Vector2 One { get { return new Vector2(1.0); } }
+        public static Vector2 Zero { get { return new Vector2(0.0); } }
+        public static Vector2 UnitX { get { return new Vector2(1.0, 0.0); } }
+        public static Vector2 UnitY { get { return new Vector2(0.0, 1.0); } }
+
+        #endregion
+
         #region Constructor
+
+        public Vector2(double value)
+            : this()
+        {
+            this.X = value;
+            this.Y = value;
+        }
 
         public Vector2(double x, double y)
             : this()
@@ -37,19 +53,9 @@ namespace System
             return new Vector2(this.X - v.X, this.Y - v.Y);
         }
 
-        public static Vector2 operator -(Vector2 v1, Vector2 v2)
-        {
-            return v1.Substract(v2);
-        }
-
         public Vector2 Add(Vector2 v)
         {
             return new Vector2(this.X + v.X, this.Y + v.Y);
-        }
-
-        public static Vector2 operator +(Vector2 v1, Vector2 v2)
-        {
-            return v1.Add(v2);
         }
 
         public Vector2 Multiply(double scalar)
@@ -59,16 +65,26 @@ namespace System
                 this.Y * scalar);
         }
 
-        public static Vector2 operator *(Vector2 v, double scalar)
-        {
-            return v.Multiply(scalar);
-        }
-
         public Vector2 Divide(double scalar)
         {
             return new Vector2(
                 this.X / scalar,
                 this.Y / scalar);
+        }
+
+        public static Vector2 operator -(Vector2 v1, Vector2 v2)
+        {
+            return v1.Substract(v2);
+        }
+
+        public static Vector2 operator +(Vector2 v1, Vector2 v2)
+        {
+            return v1.Add(v2);
+        }
+
+        public static Vector2 operator *(Vector2 v, double scalar)
+        {
+            return v.Multiply(scalar);
         }
 
         public static Vector2 operator /(Vector2 v, double scalar)
