@@ -166,85 +166,6 @@ namespace MathUtil.Tests
         #endregion
     }
 
-    public struct PointF
-    {
-        public float X { get; private set; }
-        public float Y { get; private set; }
-
-        public PointF(float x, float y)
-            : this()
-        {
-            this.X = x;
-            this.Y = y;
-        }
-
-        public void Set(float x, float y)
-        {
-            this.X = x;
-            this.Y = y;
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(X, CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator, Y);
-        }
-    }
-
-    public static class VectorUtil
-    {
-        public static float Dot(PointF a, PointF b)
-        {
-            return (a.X * b.X) + (a.Y * b.Y);
-        }
-
-        public static PointF Multiply(PointF a, float scalar)
-        {
-            return new PointF(a.X * scalar, a.Y * scalar);
-        }
-
-        public static PointF Project(PointF a, PointF b)
-        {
-            return Multiply(b, Dot(a, b) / Dot(b, b));
-        }
-
-        public static PointF Substract(PointF a, PointF b)
-        {
-            return new PointF(a.X - b.X, a.Y - b.Y);
-        }
-
-        public static PointF Add(PointF a, PointF b)
-        {
-            return new PointF(a.X + b.X, a.Y + b.Y);
-        }
-
-        public static PointF NearestPointOnLine(PointF a, PointF b, PointF p)
-        {
-            // http://en.wikipedia.org/wiki/Vector_projection
-            return Add(
-                Project(
-                    Substract(p, a),
-                    Substract(b, a)),
-                a);
-        }
-    }
-
-    public static class LineUtil
-    {
-        public static float Distance(float x1, float y1, float x2, float y2)
-        {
-            float dx = x1 - x2;
-            float dy = y1 - y2;
-            return (float)Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        public static void Middle(ref PointF point, float x1, float y1, float x2, float y2)
-        {
-            float x = x1 + x2;
-            float y = y1 + y2;
-            point.Set(x / 2f, y / 2f);
-        }
-    }
-
     class Program
     {
         static int BenchSize = 100 * 1000 * 1000;
@@ -402,19 +323,10 @@ namespace MathUtil.Tests
 
         static void TestProject()
         {
-            {
-                var v1 = new Vector2(1.0, 1.0);
-                var v2 = new Vector2(1.0, 2.0);
-                var project = v1.Project(v2);
-                Console.WriteLine("Project: " + project);
-            }
-
-            {
-                var p1 = new PointF(1.0f, 1.0f);
-                var p2 = new PointF(1.0f, 2.0f);
-                var project = VectorUtil.Project(p1, p2);
-                Console.WriteLine("Project: " + project);
-            }
+            var v1 = new Vector2(1.0, 1.0);
+            var v2 = new Vector2(1.0, 2.0);
+            var project = v1.Project(v2);
+            Console.WriteLine("Project: " + project);
         }
 
         static void BenchProject()
@@ -488,56 +400,27 @@ namespace MathUtil.Tests
 
         static void TestDistance()
         {
-            {
-                var a = new Vector2(100.0, 100.0);
-                var b = new Vector2(100.0, 200.0);
-                var distance = a.Distance(b);
-                Console.WriteLine("Distance: " + distance);
-            }
-
-            {
-                var a = new PointF(100.0f, 100.0f);
-                var b = new PointF(100.0f, 200.0f);
-                var distance = LineUtil.Distance(a.X, a.Y, b.X, b.Y);
-                Console.WriteLine("Distance: " + distance);
-            }
+            var a = new Vector2(100.0, 100.0);
+            var b = new Vector2(100.0, 200.0);
+            var distance = a.Distance(b);
+            Console.WriteLine("Distance: " + distance);
         }
 
         static void TestMiddle()
         {
-            {
-                var a = new Vector2(100.0, 100.0);
-                var b = new Vector2(100.0, 200.0);
-                var middle = a.Middle(b);
-                Console.WriteLine("Middle: " + middle);
-            }
-
-            {
-                var a = new PointF(100.0f, 100.0f);
-                var b = new PointF(100.0f, 200.0f);
-                var p = new PointF();
-                LineUtil.Middle(ref p, a.X, a.Y, b.X, b.Y);
-                Console.WriteLine("Middle: " + p);
-            }
+            var a = new Vector2(100.0, 100.0);
+            var b = new Vector2(100.0, 200.0);
+            var middle = a.Middle(b);
+            Console.WriteLine("Middle: " + middle);
         }
 
         static void TestNearestPointOnLine()
         {
-            {
-                var a = new Vector2(100.0, 100.0);
-                var b = new Vector2(100.0, 200.0);
-                var p = new Vector2(50.0, 150.0);
-                var nearest = p.NearestPointOnLine(a, b);
-                Console.WriteLine("NearestPointOnLine: " + nearest);
-            }
-
-            {
-                var a = new PointF(100.0f, 100.0f);
-                var b = new PointF(100.0f, 200.0f);
-                var p = new PointF(50.0f, 150.0f);
-                var nearest = VectorUtil.NearestPointOnLine(a, b, p);
-                Console.WriteLine("NearestPointOnLine: " + nearest);
-            }
+            var a = new Vector2(100.0, 100.0);
+            var b = new Vector2(100.0, 200.0);
+            var p = new Vector2(50.0, 150.0);
+            var nearest = p.NearestPointOnLine(a, b);
+            Console.WriteLine("NearestPointOnLine: " + nearest);
         }
     }
 }
