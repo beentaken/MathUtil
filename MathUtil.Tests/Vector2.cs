@@ -97,12 +97,29 @@ namespace System
             return (this.X * v.X) + (this.Y * v.Y);
         }
 
+        public double Angle(Vector2 v)
+        {
+            return Math.Acos(this.Dot(v));
+        }
+
         public double Cross(Vector2 v)
         {
             return (this.X * v.Y) - (this.Y * v.X);
         }
 
         #endregion
+
+        #region Vector
+
+        public double Magnitude()
+        {
+            return Math.Sqrt(this.X * this.X + this.Y * this.Y);
+        }
+
+        public double MagnitudeSquared()
+        {
+            return this.X * this.X + this.Y * this.Y;
+        }
 
         public double Length()
         {
@@ -116,8 +133,7 @@ namespace System
 
         public Vector2 Normalize()
         {
-            double length = this.Length();
-            return this / length;
+            return this / this.Length();
         }
 
         public Vector2 Project(Vector2 v)
@@ -125,10 +141,7 @@ namespace System
             return v * (this.Dot(v) / v.Dot(v));
         }
 
-        public double Angle(Vector2 v)
-        {
-            return Math.Acos(this.Dot(v));
-        }
+        #endregion
 
         #region Interpolation
 
