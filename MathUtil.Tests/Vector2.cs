@@ -136,7 +136,7 @@ namespace System
             return this / this.Length();
         }
 
-        public Vector2 Project(Vector2 v)
+        public Vector2 Projection(Vector2 v)
         {
             return v * (this.Dot(v) / v.Dot(v));
         }
@@ -195,7 +195,7 @@ namespace System
 
         public Vector2 NearestPointOnLine(Vector2 a, Vector2 b)
         {
-            return (this - a).Project(b - a) + a;
+            return (this - a).Projection(b - a) + a;
         }
 
         #endregion

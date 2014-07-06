@@ -37,23 +37,6 @@ namespace MathUtil.Tests
             //TestMiddle();
             //TestNearestPointOnLine();
 
-            /*
-            var v1 = new Vector2(100.0, 100.0);
-            var v2 = new Vector2(200.0, 100.0);
-            {
-
-                var project = v1.Project(v2);
-                Console.WriteLine("Project: " + project);
-            }
-            {
-                var project = v1.Projection(v2);
-                Console.WriteLine("Projection: " + project);
-            }
-            */
-
-            //BenchProject();
-            //BenchProjection();
-
             Console.ReadLine();
         }
 
@@ -187,15 +170,15 @@ namespace MathUtil.Tests
             Console.WriteLine("Normalize: " + normalize);
         }
 
-        static void TestProject()
+        static void TestProjection()
         {
             var v1 = new Vector2(1.0, 1.0);
             var v2 = new Vector2(1.0, 2.0);
-            var project = v1.Project(v2);
-            Console.WriteLine("Project: " + project);
+            var project = v1.Projection(v2);
+            Console.WriteLine("Projection: " + project);
         }
 
-        static void BenchProject()
+        static void BenchProjection()
         {
             var a = new Vector2[BenchSize];
             var sw = Stopwatch.StartNew();
@@ -203,27 +186,12 @@ namespace MathUtil.Tests
             {
                 var v1 = new Vector2(1.0, 1.0);
                 var v2 = new Vector2(1.0, 2.0);
-                var project = v1.Project(v2);
+                var project = v1.Projection(v2);
                 a[i] = project;
             }
             sw.Stop();
-            Console.WriteLine("Project: " + sw.Elapsed.TotalMilliseconds + "ms");
+            Console.WriteLine("Projection: " + sw.Elapsed.TotalMilliseconds + "ms");
         }
-
-        //static void BenchProjection()
-        //{
-        //    var a = new Vector2[BenchSize];
-        //    var sw = Stopwatch.StartNew();
-        //    for (int i = 0; i < BenchSize; i++)
-        //    {
-        //        var v1 = new Vector2(1.0, 1.0);
-        //        var v2 = new Vector2(1.0, 2.0);
-        //        var project = v1.Projection(v2);
-        //        a[i] = project;
-        //    }
-        //    sw.Stop();
-        //    Console.WriteLine("Projection: " + sw.Elapsed.TotalMilliseconds + "ms");
-        //}
 
         private static void TestAngle()
         {
