@@ -27,6 +27,7 @@ namespace MathUtil.Tests
             //TestNormalize();
             //TestProject();
             //BenchProject();
+            //TestAngle();
             //TestLerp();
             //TestSlerp();
             //BenchSlerp();
@@ -190,6 +191,13 @@ namespace MathUtil.Tests
             }
             sw.Stop();
             Console.WriteLine("Project: " + sw.Elapsed.TotalMilliseconds + "ms");
+        }
+
+        private static void TestAngle()
+        {
+            var v1 = new Vector2(1.0, 0.0);
+            var v2 = new Vector2(0.0, 1.0);
+            Console.WriteLine("Acos: " + v1.Angle(v2) * Vector2.RadiansToDegrees);
         }
 
         static void TestLerp()

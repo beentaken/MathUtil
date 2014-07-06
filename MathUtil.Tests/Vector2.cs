@@ -125,6 +125,11 @@ namespace System
             return v * (this.Dot(v) / v.Dot(v));
         }
 
+        public double Angle(Vector2 v)
+        {
+            return Math.Acos(this.Dot(v));
+        }
+
         #region Interpolation
 
         public Vector2 Lerp(Vector2 v, double amount)
@@ -171,6 +176,9 @@ namespace System
         #endregion
 
         #region Math
+
+        public const double RadiansToDegrees = 180.0 / Math.PI;
+        public const double DegreesToRadians = Math.PI / 180.0;
 
         public static double Clamp(double value, double min, double max)
         {
