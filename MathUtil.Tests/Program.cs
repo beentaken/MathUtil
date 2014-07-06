@@ -88,6 +88,11 @@ namespace MathUtil.Tests
             return (this.X * v.X) + (this.Y * v.Y);
         }
 
+        public double Cross(Vector2 v)
+        {
+            return (this.X * v.Y) - (this.Y * v.X);
+        }
+
         #endregion
 
         public double Length()
