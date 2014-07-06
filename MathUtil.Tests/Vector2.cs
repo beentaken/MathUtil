@@ -245,6 +245,20 @@ namespace System
         }
         */
 
+        public static Vector2 Min(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(
+                v1.X < v2.X ? v1.X : v2.X,
+                v1.Y < v2.Y ? v1.Y : v2.Y);
+        }
+
+        public static Vector2 Max(Vector2 v1, Vector2 v2)
+        {
+            return new Vector2(
+                v1.X > v2.X ? v1.X : v2.X,
+                v1.Y > v2.Y ? v1.Y : v2.Y);
+        }
+
         #endregion
 
         #region Interpolation
