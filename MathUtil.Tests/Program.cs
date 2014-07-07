@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace MathUtil.Tests
 {
+    public class Polygon : IShape
+    { 
+        public Vector2[] Vertices { get; set; }
+    }
+
     class Program
     {
         static int BenchSize = 100 * 1000 * 1000;
