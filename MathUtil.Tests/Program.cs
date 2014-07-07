@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace MathUtil.Tests
 {
+    public interface IShape
+    {
+        Vector2[] Vertices { get; set; }
+    }
+
     public class Polygon : IShape
     { 
         public Vector2[] Vertices { get; set; }
@@ -59,22 +64,25 @@ namespace MathUtil.Tests
             shape2.Vertices[3] = new Vector2(2.0, 8.0);
 
             // sat get axes
-            //var axes1 = sat.GetAxes(shape1);
-            //var axes2 = sat.GetAxes(shape2);
+            //var axes1 = sat.GetAxes(shape1.Vertices);
+            //var axes2 = sat.GetAxes(shape2.Vertices);
             //Console.WriteLine("axes1:");
             //foreach(var axis in axes1) Console.WriteLine(axis);
             //Console.WriteLine("axes2:");
             //foreach(var axis in axes2) Console.WriteLine(axis);
 
             // sat overlap
-            bool overlap = sat.Overlap(shape1, shape2);
+            bool overlap = sat.Overlap(shape1.Vertices, shape2.Vertices);
             Console.WriteLine("overlap: " + overlap);
 
             //TestSatProjectionGetOverlap();
 
             // sat mtv
             MinimumTranslationVector? mtv;
-            bool overlapMTV = sat.MinimumTranslationVector(shape1, shape2, out mtv);
+            bool overlapMTV = sat.MinimumTranslationVector(
+                shape1.Vertices, 
+                shape2.Vertices, 
+                out mtv);
             Console.WriteLine("overlapMTV: " + overlapMTV);
             if (mtv.HasValue)
             {
@@ -84,7 +92,10 @@ namespace MathUtil.Tests
 
             // sat mtv with containment
             MinimumTranslationVector? mtvContainment;
-            bool overlapMTVContainment = sat.MinimumTranslationVectorWithContainment(shape1, shape2, out mtvContainment);
+            bool overlapMTVContainment = sat.MinimumTranslationVectorWithContainment(
+                shape1.Vertices, 
+                shape2.Vertices, 
+                out mtvContainment);
             Console.WriteLine("overlapMTVContainment: " + overlapMTVContainment);
             if (mtv.HasValue)
             {
