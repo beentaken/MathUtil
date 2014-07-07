@@ -9,11 +9,6 @@ namespace System
         Vector2[] Vertices { get; set; }
     }
 
-    public class Polygon : IShape
-    { 
-        public Vector2[] Vertices { get; set; }
-    }
-
     public struct Projection
     {
         public double Min { get; private set; }
