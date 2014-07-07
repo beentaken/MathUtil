@@ -1,13 +1,11 @@
 ﻿
+
 namespace System
 {
-    // SAT (Separating Axis Theorem): http://www.codezealot.org/archives/55
-    // Sample: https://code.google.com/p/dyn4j/
-
-    public interface IShape
-    {
-        Vector2[] Vertices { get; set; }
-    }
+    // SAT
+    // Separating Axis Theorem
+    // based on pseudo code: 
+    // http://www.codezealot.org/archives/55
 
     public struct Projection
     {
@@ -54,16 +52,16 @@ namespace System
 
     public class SeparatingAxisTheorem
     {
-        public Vector2[] GetAxes(IShape shape)
+        public Vector2[] GetAxes(Vector2[] vertices)
         {
-            Vector2[] axes = new Vector2[shape.Vertices.Length];
+            Vector2[] axes = new Vector2[vertices.Length];
             // loop over the vertices
-            for (int i = 0; i < shape.Vertices.Length; i++) 
+            for (int i = 0; i < vertices.Length; i++) 
             {
                 // get the current vertex
-                Vector2 p1 = shape.Vertices[i];
+                Vector2 p1 = vertices[i];
                 // get the next vertex
-                Vector2 p2 = shape.Vertices[i + 1 == shape.Vertices.Length ? 0 : i + 1];
+                Vector2 p2 = vertices[i + 1 == vertices.Length ? 0 : i + 1];
                 // subtract the two to get the edge vector
                 Vector2 edge = p1.Subtract(p2);
                 // get either perpendicular vector
@@ -74,14 +72,14 @@ namespace System
             return axes;
         }
 
-        public Projection Project(IShape shape, Vector2 axis)
+        public Projection Project(Vector2[] vertices, Vector2 axis)
         {
-            double min = axis.Dot(shape.Vertices[0]);
+            double min = axis.Dot(vertices[0]);
             double max = min;
-            for (int i = 1; i < shape.Vertices.Length; i++) 
+            for (int i = 1; i < vertices.Length; i++) 
             {
                 // NOTE: the axis must be normalized to get accurate projections
-                double p = axis.Dot(shape.Vertices[i]);
+                double p = axis.Dot(vertices[i]);
                 if (p < min) 
                 {
                     min = p;
@@ -94,17 +92,17 @@ namespace System
             return new Projection(min, max);
         }
 
-        public bool Overlap(IShape shape1, IShape shape2)
+        public bool Overlap(Vector2[] vertices1, Vector2[] vertices2)
         {
-            Vector2[] axes1 = GetAxes(shape1);
-            Vector2[] axes2 = GetAxes(shape2);
+            Vector2[] axes1 = GetAxes(vertices1);
+            Vector2[] axes2 = GetAxes(vertices2);
             // loop over the axes1
             for (int i = 0; i < axes1.Length; i++) 
             {
                 Vector2 axis = axes1[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
@@ -117,8 +115,8 @@ namespace System
             {
                 Vector2 axis = axes2[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
@@ -132,21 +130,21 @@ namespace System
         }
 
         public bool MinimumTranslationVector(
-            IShape shape1, 
-            IShape shape2, 
+            Vector2[] vertices1, 
+            Vector2[] vertices2, 
             out MinimumTranslationVector? mtv)
         {
             double overlap =  Double.PositiveInfinity; // really large value;
             Vector2 smallest = default(Vector2);
-            Vector2[] axes1 = GetAxes(shape1);
-            Vector2[] axes2 = GetAxes(shape2);
+            Vector2[] axes1 = GetAxes(vertices1);
+            Vector2[] axes2 = GetAxes(vertices2);
             // loop over the axes1
             for (int i = 0; i < axes1.Length; i++) 
             {
                 Vector2 axis = axes1[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
@@ -172,8 +170,8 @@ namespace System
             {
                 Vector2 axis = axes2[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
@@ -201,21 +199,21 @@ namespace System
         }
 
         public bool MinimumTranslationVectorWithContainment(
-            IShape shape1, 
-            IShape shape2, 
+            Vector2[] vertices1, 
+            Vector2[] vertices2, 
             out MinimumTranslationVector? mtv)
         {
             double overlap =  Double.PositiveInfinity; // really large value;
             Vector2 smallest = default(Vector2);
-            Vector2[] axes1 = GetAxes(shape1);
-            Vector2[] axes2 = GetAxes(shape2);
+            Vector2[] axes1 = GetAxes(vertices1);
+            Vector2[] axes2 = GetAxes(vertices2);
             // loop over the axes1
             for (int i = 0; i < axes1.Length; i++) 
             {
                 Vector2 axis = axes1[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
@@ -258,8 +256,8 @@ namespace System
             {
                 Vector2 axis = axes2[i];
                 // project both shapes onto the axis
-                Projection p1 = Project(shape1, axis);
-                Projection p2 = Project(shape2, axis);
+                Projection p1 = Project(vertices1, axis);
+                Projection p2 = Project(vertices2, axis);
                 // do the projections overlap?
                 if (!p1.Overlap(p2)) 
                 {
