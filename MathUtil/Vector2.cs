@@ -1,7 +1,8 @@
-﻿
-namespace System
+﻿using System;
+
+namespace MathUtil
 {
-    public struct Vector2
+    public struct Vector2 : IComparable<Vector2>
     {
         #region Properties
 
@@ -37,12 +38,35 @@ namespace System
 
         #endregion
 
-        #region Overrides
+        #region ToString
 
         public override string ToString()
         {
             return string.Concat(X, System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator, Y);
         }
+
+        #endregion
+
+        #region IComparable
+
+        public static bool operator <(Vector2 v1, Vector2 v2)
+        {
+            return v1.X < v2.X || (v1.X == v2.X && v1.Y < v2.Y);
+        }
+
+        public static bool operator >(Vector2 v1, Vector2 v2)
+        {
+            return v1.X > v2.X || (v1.X == v2.X && v1.Y > v2.Y);
+        }
+
+        public int CompareTo(Vector2 v)
+        {
+            return (this > v) ? -1 : ((this < v) ? 1 : 0);
+        } 
+
+        #endregion
+
+        #region Equals
 
         public bool Equals(Vector2 v)
         {
