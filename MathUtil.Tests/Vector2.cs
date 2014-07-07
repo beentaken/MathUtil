@@ -1,5 +1,4 @@
 ﻿
-
 namespace System
 {
     public struct Vector2
