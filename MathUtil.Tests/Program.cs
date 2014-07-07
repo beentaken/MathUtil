@@ -14,47 +14,142 @@ namespace MathUtil.Tests
 
         static void Main(string[] args)
         {
-            //TestSubstract();
-            //TestAdd();
-            //TestMultiply();
-            //BenchMultiply();
-            //TestDivide();
-            //TestDot();
-            //BenchDot();
-            //TestCross();
-            //TestLength();
-            //TestLengthSquared();
-            //TestNormalize();
-            //TestProject();
-            //BenchProject();
-            TestReflect();
-            //TestAngle();
-            //TestLerp();
-            //TestSlerp();
-            //BenchSlerp();
-            //TestNlerp();
-            //BenchNlerp();
-            //TestDistance();
-            //TestMiddle();
-            //TestNearestPointOnLine();
-
+            //TestVectors();
+            TestSat();
             Console.ReadLine();
         }
 
-        static void TestSubstract()
+        static void TestSat()
+        {
+            var sat = new SeparatingAxisTheorem();
+
+            // shape1
+            var shape1 = new Polygon();
+            shape1.Vertices = new Vector2[4];
+            shape1.Vertices[0] = new Vector2(0.0, 0.0);
+            shape1.Vertices[1] = new Vector2(10.0, 0.0);
+            shape1.Vertices[2] = new Vector2(10.0, 10.0);
+            shape1.Vertices[3] = new Vector2(0.0, 10.0);
+
+            // shape2
+            var shape2 = new Polygon();
+            shape2.Vertices = new Vector2[4];
+
+            // overlaps
+            //shape2.Vertices[0] = new Vector2(5.0, 5.0);
+            //shape2.Vertices[1] = new Vector2(20.0, 5.0);
+            //shape2.Vertices[2] = new Vector2(20.0, 20.0);
+            //shape2.Vertices[3] = new Vector2(5.0, 20.0);
+
+            // do not overlaps
+            //shape2.Vertices[0] = new Vector2(15.0, 5.0);
+            //shape2.Vertices[1] = new Vector2(20.0, 5.0);
+            //shape2.Vertices[2] = new Vector2(20.0, 20.0);
+            //shape2.Vertices[3] = new Vector2(15.0, 20.0);
+
+            // shape1 contains shape2
+            shape2.Vertices[0] = new Vector2(2.0, 2.0);
+            shape2.Vertices[1] = new Vector2(8.0, 2.0);
+            shape2.Vertices[2] = new Vector2(8.0, 8.0);
+            shape2.Vertices[3] = new Vector2(2.0, 8.0);
+
+            // sat get axes
+            //var axes1 = sat.GetAxes(shape1);
+            //var axes2 = sat.GetAxes(shape2);
+            //Console.WriteLine("axes1:");
+            //foreach(var axis in axes1) Console.WriteLine(axis);
+            //Console.WriteLine("axes2:");
+            //foreach(var axis in axes2) Console.WriteLine(axis);
+
+            // sat overlap
+            bool overlap = sat.Overlap(shape1, shape2);
+            Console.WriteLine("overlap: " + overlap);
+
+            //TestSatProjectionGetOverlap();
+
+            // sat mtv
+            MinimumTranslationVector? mtv;
+            bool overlapMTV = sat.MinimumTranslationVector(shape1, shape2, out mtv);
+            Console.WriteLine("overlapMTV: " + overlapMTV);
+            if (mtv.HasValue)
+            {
+                Console.WriteLine("mtv.overlap: " + mtv.Value.Overlap);
+                Console.WriteLine("mtv.smallest: " + mtv.Value.Smallest);
+            }
+
+            // sat mtv with containment
+            MinimumTranslationVector? mtvContainment;
+            bool overlapMTVContainment = sat.MinimumTranslationVectorWithContainment(shape1, shape2, out mtvContainment);
+            Console.WriteLine("overlapMTVContainment: " + overlapMTVContainment);
+            if (mtv.HasValue)
+            {
+                Console.WriteLine("mtvContainment.overlap: " + mtvContainment.Value.Overlap);
+                Console.WriteLine("mtvContainment.smallest: " + mtvContainment.Value.Smallest);
+            }
+        }
+
+        static void TestSatProjectionGetOverlap()
+        {
+            var ps = new Projection[10];
+            ps[0] = new Projection(0, 3);
+            ps[1] = new Projection(2, 30);
+            ps[2] = new Projection(4, 20);
+            ps[3] = new Projection(-1, 7);
+            ps[4] = new Projection(1, 10);
+            ps[5] = new Projection(2, 4);
+            ps[6] = new Projection(0, 3);
+            ps[7] = new Projection(3, 5);
+            ps[8] = new Projection(-2, 6);
+            ps[9] = new Projection(-1, 10);
+
+            Console.WriteLine(ps[0].GetOverlap(ps[1]) == 1);
+            Console.WriteLine(ps[2].GetOverlap(ps[3]) == 3);
+            Console.WriteLine(ps[4].GetOverlap(ps[5]) == 2);
+            Console.WriteLine(ps[6].GetOverlap(ps[7]) == 0);
+            Console.WriteLine(ps[8].GetOverlap(ps[9]) == 7);
+        }
+
+        static void TestVectors()
+        {
+            TestSubtract();
+            TestAdd();
+            TestMultiply();
+            BenchMultiply();
+            TestDivide();
+            TestDot();
+            BenchDot();
+            TestCross();
+            TestLength();
+            TestLengthSquared();
+            TestNormalize();
+            TestProject();
+            BenchProject();
+            TestReflect();
+            TestAngle();
+            TestLerp();
+            TestSlerp();
+            BenchSlerp();
+            TestNlerp();
+            BenchNlerp();
+            TestDistance();
+            TestMiddle();
+            TestNearestPointOnLine();
+        }
+
+        static void TestSubtract()
         {
             {
                 var v1 = new Vector2(1.0, 1.0);
                 var v2 = new Vector2(1.0, 2.0);
-                var substract = v1.Substract(v2);
-                Console.WriteLine("Substract: " + substract);
+                var subtract = v1.Subtract(v2);
+                Console.WriteLine("Subtract: " + subtract);
             }
 
             {
                 var v1 = new Vector2(1.0, 1.0);
                 var v2 = new Vector2(1.0, 2.0);
-                var substract = v1 - v2;
-                Console.WriteLine("Substract: " + substract);
+                var subtract = v1 - v2;
+                Console.WriteLine("Subtract: " + subtract);
             }
         }
 
