@@ -1,4 +1,5 @@
 ﻿
+
 namespace System
 {
     public struct Vector2
@@ -72,7 +73,12 @@ namespace System
             return new Vector2(-this.X, -this.Y);
         }
 
-        public Vector2 Substract(Vector2 v)
+        public Vector2 Perpendicular()
+        {
+            return new Vector2(-this.Y, this.X);
+        }
+
+        public Vector2 Subtract(Vector2 v)
         {
             return new Vector2(this.X - v.X, this.Y - v.Y);
         }
